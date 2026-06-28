@@ -1017,19 +1017,20 @@ body::after{
 .gallery-bg-scroller{
 
     position:absolute;
-    top:0;
-    left:0;
+    inset:0;
 
     width:100%;
+    height:100%;
 
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-auto-rows:minmax(150px,1fr);
 
-    gap:10px;
-    padding:10px;
+    gap:12px;
+    padding:14px;
 
     z-index:1;
-    opacity:.55;
+    opacity:.78;
 
     pointer-events:none;
 
@@ -1052,7 +1053,8 @@ body::after{
 .gallery-img-box{
 
     width:100%;
-    aspect-ratio:1;
+    aspect-ratio:.84;
+    min-height:150px;
 
     overflow:hidden;
     border-radius:18px;
@@ -1107,9 +1109,9 @@ body::after{
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
 
-    padding:24px;
+    padding:clamp(18px,4vh,36px) clamp(16px,4vw,28px) clamp(24px,6vh,40px);
 }
 
 /* Title */
@@ -1138,9 +1140,11 @@ body::after{
 .long-text-box{
 
     width:100%;
-    max-width:520px;
+    max-width:620px;
 
     max-height:70vh;
+
+    margin-top:clamp(16px,3vh,24px);
 
     overflow-y:auto;
 
@@ -1149,17 +1153,17 @@ body::after{
     border-radius:30px;
 
     background:
-        rgba(255,255,255,.08);
+        rgba(10,8,24,.24);
 
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
 
     border:
-        1.5px solid rgba(216,200,255,.24);
+        1px solid rgba(255,255,255,.12);
 
     box-shadow:
-        0 16px 42px rgba(0,0,0,.42),
-        inset 0 0 30px rgba(255,255,255,.04);
+        0 16px 42px rgba(0,0,0,.3),
+        inset 0 0 24px rgba(255,255,255,.03);
 
     color:var(--text-secondary);
 
@@ -1239,6 +1243,33 @@ body::after{
 .gallery-inner .btn{
 
     margin-top:28px;
+}
+
+@media (min-height:800px){
+
+    .gallery-bg-scroller{
+        gap:16px;
+        padding:18px;
+        opacity:.84;
+    }
+
+    .gallery-img-box{
+        aspect-ratio:.78;
+        min-height:180px;
+    }
+
+    .gallery-inner{
+        justify-content:flex-start;
+        padding-top:clamp(24px,5vh,48px);
+    }
+
+    .long-text-box{
+        max-width:660px;
+        padding:32px 34px;
+        background:rgba(8,6,18,.2);
+        backdrop-filter:blur(20px);
+        -webkit-backdrop-filter:blur(20px);
+    }
 }
 
 /* ==========================================================
@@ -2432,11 +2463,6 @@ body::after{
     <button class="modal-close" id="mClose">Close 💖</button>
   </div>
 </div>
-<div class="audio-control" id="audioControl">
-  <button id="volumeDown" type="button" aria-label="Lower volume">🔉</button>
-  <input id="volumeSlider" type="range" min="0" max="100" value="72" aria-label="Volume" />
-  <button id="volumeUp" type="button" aria-label="Raise volume">🔊</button>
-</div>
 <div id="flashOverlay"></div>
 <div id="blackout"></div>
 <div class="toast" id="toast"></div>
@@ -2479,8 +2505,6 @@ function pHeartbeat(){try{ensureAC();if(!AC||!masterGain)return;var t=AC.current
 }
 function pChime(){try{ensureAC();if(!AC||!masterGain)return;[1047,1319,1568,2093].forEach(function(n,i){tone(n,.58,'sine',.05,i*.12);});var t=AC.currentTime;var o=AC.createOscillator();var g=AC.createGain();o.type='triangle';o.frequency.setValueAtTime(1568,t+.15);o.frequency.exponentialRampToValueAtTime(2140,t+.6);g.gain.setValueAtTime(.035*audioVolume,t+.15);g.gain.exponentialRampToValueAtTime(.0001,t+.65);o.connect(g);g.connect(masterGain);o.start(t+.15);o.stop(t+.68);}catch(e){}
 }
-setTimeout(function(){var slider=$('volumeSlider'),down=$('volumeDown'),up=$('volumeUp');if(slider){slider.addEventListener('input',function(){setMasterVolume(this.value/100);});slider.value=Math.round(audioVolume*100);}if(down){down.addEventListener('click',function(){adjustVolume(-0.1);});}if(up){up.addEventListener('click',function(){adjustVolume(0.1);});}},0);
-
 
 var vizAnimId=null;
 function stopViz(){if(vizAnimId){cancelAnimationFrame(vizAnimId);vizAnimId=null;}}
